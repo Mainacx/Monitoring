@@ -1,0 +1,34 @@
+global:
+  scrape_interval: 30s  
+  evaluation_interval: 1m  
+
+scrape_configs:
+  - job_name: 'blackbox_http_2xx'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]  
+    static_configs:
+      - targets:
+        - https://ptsecurity.com и
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - target_label: __address__
+        replacement: blackbox_exporter:9115 
+
+  - job_name: 'blackbox_tcp_connect'
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]  
+    static_configs:
+      - targets:
+        - ptsecurity.com:443  
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - target_label: __address__
+        replacement: blackbox_exporter:9115
+
+rule_files:
+  - 'alert_rules.yml'  
+

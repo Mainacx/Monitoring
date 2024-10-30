@@ -1,0 +1,20 @@
+groups:
+- name: blackbox_alerts
+  rules:
+  - alert: BlackboxHttpProbeFail
+    expr: probe_success{job="blackbox_http_2xx"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "HTTP probe failed for {{ $labels.instance }}"
+      description: "HTTP probe failed for {{ $labels.instance }}. Check the website availability."
+
+  - alert: BlackboxTcpProbeFail
+    expr: probe_success{job="blackbox_tcp_connect"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "TCP probe failed for {{ $labels.instance }}"
+      description: "TCP probe failed for {{ $labels.instance }}. Check the port availability."
